@@ -1,5 +1,5 @@
 import http from "node:http"
-
+import { json } from "./middlewares/json.js"
 // - Criar usuários
 // - Listagem usuários
 // - Edição de usuários
@@ -17,7 +17,7 @@ import http from "node:http"
 // PATCH => Atualizar uma informação específica de um recurso no back-end
 // DELETE => Deletar um recurso do back-end
 
-// GET /users => Buscando usuários no banc-end
+// GET /users => Buscando usuários no back-end
 // POST /users => Criar um usuário no back-end
 
 // Stateful - Stateless
@@ -31,22 +31,10 @@ const users = []
 const server = http.createServer(async (req, res) => {
   const { method, url } = req
 
-  const buffers = []
-
-  for await (const chunk of req) {
-    buffers.push(chunk)
-  }
-
-  try {
-    req.body = JSON.parse(Buffer.concat(buffers).toString())
-  } catch {
-    req.body = null
-  }
+  await json(req, res)
 
   if (method === "GET" && url === "/users") {
-    return res
-      .setHeader("Content-type", "application/json")
-      .end(JSON.stringify(users))
+    return res.end(JSON.stringify(users))
   }
 
   if (method === "POST" && url === "/users") {

@@ -9,15 +9,6 @@ import { routes } from "./routes.js"
 // Route Parameters: Identificação de recurso
 // Request Body: Envio de informações de um formulário (HTTPs)
 
-//http://localhost:3333/users?userId=1&name=Diego
-
-// GET http://localhost:3333/users/1
-// DELETE http: //localhost:3333/users/1
-
-// POST http://localhost:3333/users
-
-// Edição e remoção
-
 const server = http.createServer(async (req, res) => {
   const { method, url } = req
 
@@ -29,7 +20,8 @@ const server = http.createServer(async (req, res) => {
 
   if (route) {
     const routeParams = req.url.match(route.path)
-    console.log(routeParams)
+
+    req.params = { ...routeParams.groups }
 
     return route.handler(req, res)
   }
